@@ -79,7 +79,7 @@ def train(args):
                     print('[Epoch: %d, Batch: %4d / %4d], loss: %.3f' %
                         (epoch + 1, i + 1, len(train_loader), running_loss / 10))
                     running_loss = 0.0
-        
+                    
         pointnet.eval()
         correct = total = 0
         
