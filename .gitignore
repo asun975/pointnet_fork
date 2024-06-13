@@ -1,0 +1,6 @@
+# Pycache
+*.pyc 
+source/__pycache__/
+
+# Models
+checkpoints/
