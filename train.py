@@ -10,6 +10,8 @@ from source import utils
 from source.args import parse_args
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
+from timeit import default_timer as timer
+from myutils import print_train_time
 
 random.seed = 42
 
@@ -61,6 +63,7 @@ def train(args):
         print(error)
     
     print('Start training')
+    train_time_start = timer()
     for epoch in range(args.epochs):
         pointnet.train()
         running_loss = 0.0
@@ -99,7 +102,13 @@ def train(args):
         checkpoint = Path(args.save_model_path)/'save_'+str(epoch)+'.pth'
         torch.save(pointnet.state_dict(), checkpoint)
         print('Model saved to ', checkpoint)
-
+    # Calculate training time
+    train_time_end = timer()
+    total_train_time_model = print_train_time(
+        start=train_time_start,
+        end= train_time_end,
+        device=device
+    )
 if __name__ == '__main__':
     args = parse_args()
     train(args)
