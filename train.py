@@ -104,7 +104,7 @@ def train(args):
         print('Model saved to ', checkpoint)
     # Calculate training time
     train_time_end = timer()
-    total_train_time_model = print_train_time(
+    print_train_time(
         start=train_time_start,
         end= train_time_end,
         device=device
