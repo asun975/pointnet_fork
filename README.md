@@ -1,3 +1,4 @@
+> this fork uses python=3.8 as required for pytorch 2.3.1
 <a href="https://colab.research.google.com/github/nikitakaraevv/pointnet/blob/master/nbs/PointNetClass.ipynb" target="_parent\"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 # PointNet
