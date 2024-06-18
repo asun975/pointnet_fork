@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 import random
 import os
 import torch
@@ -11,7 +12,10 @@ from source.args import parse_args
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 from timeit import default_timer as timer
-from myutils import print_train_time
+import traceback
+from sys import stdout
+
+from myutils import print_train_time, plot_loss_curves
 
 random.seed = 42
 
@@ -62,9 +66,14 @@ def train(args):
     except OSError as error:
         print(error)
     
+    # Empty lists to track loss and acc values
+    results = []
+    train_loss_values = []
+    test_acc= []
+
     print('Start training')
-    train_time_start = timer()
     for epoch in range(args.epochs):
+        train_time_start = timer()  # start training timer
         pointnet.train()
         running_loss = 0.0
         for i, data in enumerate(train_loader, 0):
@@ -79,10 +88,24 @@ def train(args):
             # print statistics
             running_loss += loss.item()
             if i % 10 == 9:    # print every 10 mini-batches
+                    train_loss_values.append(running_loss)
                     print('[Epoch: %d, Batch: %4d / %4d], loss: %.3f' %
                         (epoch + 1, i + 1, len(train_loader), running_loss / 10))
                     running_loss = 0.0
-                    
+
+        # Calculate training time
+        train_time_end = timer()
+        print_train_time(
+            start=train_time_start,
+            end= train_time_end,
+            device=device
+        )
+        # Add train_loss and batch_count to model checkpoint dictionary
+        chkpoint_dict = {
+            "train_loss": train_loss_values
+        }
+        results.append(chkpoint_dict)
+
         pointnet.eval()
         correct = total = 0
         
@@ -97,18 +120,23 @@ def train(args):
                     correct += (predicted == labels).sum().item()
             val_acc = 100. * correct / total
             print('Valid accuracy: %d %%' % val_acc)
+            # Record test accuracy of model checkpoint
+            test_acc.append(val_acc)
+            results[epoch]['test_acc'] = test_acc
+
+
         # save the model
-        
         checkpoint = Path(args.save_model_path)/'save_'+str(epoch)+'.pth'
         torch.save(pointnet.state_dict(), checkpoint)
         print('Model saved to ', checkpoint)
-    # Calculate training time
-    train_time_end = timer()
-    print_train_time(
-        start=train_time_start,
-        end= train_time_end,
-        device=device
-    )
+
+    return results
+    
 if __name__ == '__main__':
     args = parse_args()
-    train(args)
+    train_results = train(args)
+    try:
+        plot_loss_curves(train_results)
+    except Exception as e:
+            print(f"An unexpected exception occured of type {type(e)}")
+            print(traceback.format_exc(limit=2))        
