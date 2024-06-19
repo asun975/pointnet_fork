@@ -69,7 +69,7 @@ def train(args):
     # Empty lists to track loss and acc values
     results = []
     train_loss_values = []
-    test_acc= []
+    test_acc = 0
 
     print('Start training')
     for epoch in range(args.epochs):
@@ -101,10 +101,10 @@ def train(args):
             device=device
         )
         # Add train_loss and batch_count to model checkpoint dictionary
-        chkpoint_dict = {
+        '''chkpoint_dict = {
             "train_loss": train_loss_values
         }
-        results.append(chkpoint_dict)
+        results.append(chkpoint_dict)'''
 
         pointnet.eval()
         correct = total = 0
@@ -121,14 +121,22 @@ def train(args):
             val_acc = 100. * correct / total
             print('Valid accuracy: %d %%' % val_acc)
             # Record test accuracy of model checkpoint
-            test_acc.append(val_acc)
-            results[epoch]['test_acc'] = test_acc
+            test_acc = val_acc
+            #results[epoch]['test_acc'] = test_acc
 
 
         # save the model
         checkpoint = Path(args.save_model_path)/'save_'+str(epoch)+'.pth'
         torch.save(pointnet.state_dict(), checkpoint)
         print('Model saved to ', checkpoint)
+        # Add train loss and test accuracy to model checkpoint dictionary
+        chkpoint_dict = {
+            "train_loss": train_loss_values,
+            "test_acc": test_acc
+        }
+        results.append(chkpoint_dict)
+        train_loss.clear()
+        test_acc = 0
 
     return results
     
