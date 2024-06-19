@@ -40,7 +40,7 @@ def plot_loss_curves(results):
     plt.title("train Loss")
     plt.xlabel("Batches")
     plt.legend()
-    plt.show()
+    #plt.show()
 
     # Plot test accuracy
     acc = []
@@ -50,7 +50,9 @@ def plot_loss_curves(results):
     for model in results:
         print(model)
         acc.append(model["test_acc"])
+    plt.subplot(1, 2, 2)
     plt.plot(batches, acc, label="Saved models")
+    plt.legend()
     plt.show()
     '''labels = [f"Model{index}" for index in results]
     acc = [chkpoint["test_acc"] for chkpoint in results]
