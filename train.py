@@ -135,7 +135,7 @@ def train(args):
             "test_acc": test_acc
         }
         results.append(chkpoint_dict)
-        train_loss.clear()
+        train_loss_values.clear()
         test_acc = 0
 
     return results
