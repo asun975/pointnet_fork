@@ -48,8 +48,10 @@ def plot_loss_curves(results):
     '''for model in results:
         print(model)'''
     for model in results:
+        print(model)
         acc.append(model["test_acc"])
     plt.plot(batches, acc, label="Saved models")
+    plt.show()
     '''labels = [f"Model{index}" for index in results]
     acc = [chkpoint["test_acc"] for chkpoint in results]
     plt.figure(figsize=(10, 5))
