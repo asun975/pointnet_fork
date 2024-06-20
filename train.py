@@ -67,13 +67,12 @@ def train(args):
         print(error)
     
     # Empty lists to track loss and acc values
-    results = []
-    #train_loss_values = []
-    #test_acc = 0
+    train_loss_values = []
+    test_acc = []
 
     print('Start training')
     for epoch in range(args.epochs):
-        train_loss_values = []
+        #train_loss_values = []
         train_time_start = timer()  # start training timer
         pointnet.train()
         running_loss = 0.0
@@ -122,7 +121,7 @@ def train(args):
             val_acc = 100. * correct / total
             print('Valid accuracy: %d %%' % val_acc)
             # Record test accuracy of model checkpoint
-            test_acc = val_acc
+            test_acc.append(val_acc)
             #results[epoch]['test_acc'] = test_acc
 
 
@@ -130,15 +129,14 @@ def train(args):
         checkpoint = Path(args.save_model_path)/'save_'+str(epoch)+'.pth'
         torch.save(pointnet.state_dict(), checkpoint)
         print('Model saved to ', checkpoint)
-        # Add train loss and test accuracy to model checkpoint dictionary
-        chkpoint_dict = {
-            "train_loss": train_loss_values,
-            "test_acc": test_acc
-        }
-        results.append(chkpoint_dict)
+ 
         #train_loss_values.clear()
         #test_acc = 0
-
+    # Add train loss and test accuracy to results dictionary
+    results = {
+        "train_loss": train_loss_values,
+        "test_acc": test_acc
+    }
     return results
     
 if __name__ == '__main__':
