@@ -68,11 +68,12 @@ def train(args):
     
     # Empty lists to track loss and acc values
     results = []
-    train_loss_values = []
-    test_acc = 0
+    #train_loss_values = []
+    #test_acc = 0
 
     print('Start training')
     for epoch in range(args.epochs):
+        train_loss_values = []
         train_time_start = timer()  # start training timer
         pointnet.train()
         running_loss = 0.0
@@ -135,8 +136,8 @@ def train(args):
             "test_acc": test_acc
         }
         results.append(chkpoint_dict)
-        train_loss_values.clear()
-        test_acc = 0
+        #train_loss_values.clear()
+        #test_acc = 0
 
     return results
     
