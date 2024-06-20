@@ -47,6 +47,7 @@ def plot_loss_curves(results):
     plt.title("Accuracy")
     plt.xlabel("Epochs")
     plt.legend()
+    plt.show()
 
 # modified from zero to mastery pytorch course by mdbourke (github).
 # Plot loss curves of a model
