@@ -88,7 +88,7 @@ def train(args):
             # print statistics
             running_loss += loss.item()
             if i % 10 == 9:    # print every 10 mini-batches
-                    train_loss_values.append(running_loss)
+                    train_loss_values.append(running_loss / 10)
                     print('[Epoch: %d, Batch: %4d / %4d], loss: %.3f' %
                         (epoch + 1, i + 1, len(train_loader), running_loss / 10))
                     running_loss = 0.0
